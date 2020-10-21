@@ -1,7 +1,7 @@
 package com.gildedrose;
 
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -58,4 +58,52 @@ class GildedRoseTest {
         // THEN
         assertThat(item.quality).isLessThanOrEqualTo(50);
     }
+
+    @ParameterizedTest(name = "Aged Brie actually increases in Quality the older it gets")
+    @CsvSource({
+            "Aged Brie, -50, -51, 49, 50",
+            "Aged Brie, -2, -3, 44, 46",
+            "Aged Brie, -1, -2, 7, 9",
+            "Aged Brie, 0, -1, 10, 12",
+            "Aged Brie, 1, 0, 10, 11",
+    })
+    void should_increase_quality_by_2_when_quality_of_AgedBrie_gets_older(String itemName, int itemSellIn, int expectedSellIn, int itemQuality, int expectedQuality) {
+        // GIVEN
+        Item item = new Item(itemName, itemSellIn, itemQuality);
+
+        // WHEN
+        gildedRose.updateItem(item);
+
+        // THEN
+        SoftAssertions soft = new SoftAssertions();
+        soft.assertThat(item.quality).isEqualTo(expectedQuality);
+        soft.assertThat(item.sellIn).isEqualTo(expectedSellIn);
+        soft.assertAll();
+    }
+
+
+//    @ParameterizedTest(name = "Aged Brie actually increases in Quality the older it gets")
+//    @CsvSource({
+//            "Aged Brie, -2, 10, 12",
+//            "Aged Brie, -1, 10, 12",
+//            "Aged Brie, 0, 10",
+//            "Aged Brie, 1, 10",
+//            "Aged Brie, 2, 10",
+//            "Aged Brie, 7, 10",
+//            "Aged Brie, 8, 10",
+//            "Aged Brie, 10, 10",
+//            "Aged Brie, 15, 10",
+//            "Aged Brie, 49, 10",
+//    })
+//    void should_increase_quality_by_2_when_quality_of_AgedBrie_gets_older(String itemName, int itemSellIn, int itemQuality) {
+//        // GIVEN
+//        Item item = new Item(itemName, itemSellIn, itemQuality);
+//
+//        // WHEN
+//        gildedRose.updateItem(item);
+//        System.out.println(item);
+//
+//        // THEN
+//        assertThat(item).isNotNull();
+//    }
 }
