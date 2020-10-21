@@ -1,9 +1,20 @@
 package com.gildedrose;
 
+import com.gildedrose.item.AgedBrie;
+import com.gildedrose.item.TafkalConcert;
+
 import java.util.List;
+import java.util.Map;
+
+import static java.util.Optional.ofNullable;
 
 class GildedRose {
-    List<Item> items;
+    private final List<Item> items;
+
+    private final Map<String, ItemRule> itemsRules = Map.of(
+            "Backstage passes to a TAFKAL80ETC concert", new TafkalConcert(),
+            "Aged Brie", new AgedBrie()
+    );
 
     public GildedRose(List<Item> items) {
         this.items = items;
@@ -13,58 +24,9 @@ class GildedRose {
         items.forEach(this::updateItem);
     }
 
-    //At the end of each day our system lowers both values for every item
-    //Once the sell by date has passed, Quality degrades twice as fast
-    //The Quality of an item is never negative                                              TESTED(add test to avoid init item by negative value)
-    //“Aged Brie” actually increases in Quality the older it gets                           TESTED
-    //The Quality of an item is never more than 50                                          TESTED(add test to avoid init item by value more than 50)
-    //“Sulfuras”, being a legendary item, never has to be sold or decreases in Quality      TESTED
-    //“Backstage passes”, like aged brie, increases in Quality as it’s SellIn value approaches; Quality increases by 2 when there are 10 days or less and by 3 when there are 5 days or less but Quality drops to 0 after the concert  TESTED
-
-    //Aged Brie
-    //Backstage passes to a TAFKAL80ETC concert
-    //Sulfuras, Hand of Ragnaros
-
-    //quality
-    //sellIn
-
     public void updateItem(Item item) {
-        if (item.name.equals("Aged Brie")) {
-            if (item.quality < 50) {
-                item.quality = item.quality + 1;
-            }
-
-            item.sellIn = item.sellIn - 1;
-
-            if (item.sellIn < 0) {
-                if (item.quality < 50) {
-                    item.quality = item.quality + 1;
-                }
-            }
-        }
-
-        if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-            if (item.quality < 50) {
-                item.quality = item.quality + 1;
-
-                if (item.sellIn < 11) {
-                    if (item.quality < 50) {
-                        item.quality = item.quality + 1;
-                    }
-                }
-
-                if (item.sellIn < 6) {
-                    if (item.quality < 50) {
-                        item.quality = item.quality + 1;
-                    }
-                }
-            }
-
-            item.sellIn = item.sellIn - 1;
-            if (item.sellIn < 0) {
-                item.quality = 0;
-            }
-        }
-
+        ofNullable(itemsRules.get(item.name))
+                .ifPresent(itemRule -> itemRule.updateItem(item));
     }
 }
+
