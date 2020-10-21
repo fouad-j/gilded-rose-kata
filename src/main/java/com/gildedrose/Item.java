@@ -10,6 +10,7 @@ public class Item {
 
     public Item(String name, int sellIn, int quality) {
         // TODO throw exception when quality is negative
+        // TODO throw exception when quality is more than 50
         this.name = name;
         this.sellIn = sellIn;
         this.quality = quality;
