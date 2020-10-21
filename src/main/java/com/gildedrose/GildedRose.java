@@ -18,7 +18,7 @@ class GildedRose {
     //The Quality of an item is never negative                                              TESTED(add test to avoid init item by negative value)
     //“Aged Brie” actually increases in Quality the older it gets                           TESTED
     //The Quality of an item is never more than 50                                          TESTED(add test to avoid init item by value more than 50)
-    //“Sulfuras”, being a legendary item, never has to be sold or decreases in Quality
+    //“Sulfuras”, being a legendary item, never has to be sold or decreases in Quality      TESTED
     //“Backstage passes”, like aged brie, increases in Quality as it’s SellIn value approaches; Quality increases by 2 when there are 10 days or less and by 3 when there are 5 days or less but Quality drops to 0 after the concert
 
     //Aged Brie
@@ -47,12 +47,6 @@ class GildedRose {
                     if (item.quality < 50) {
                         item.quality = item.quality + 1;
                     }
-                }
-            }
-        } else {
-            if (item.quality > 0) {
-                if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
-                    item.quality = item.quality - 1;
                 }
             }
         }
